@@ -14,8 +14,11 @@ moreLocationsToAdd = False
 moreLocationsToAddAnswer = input('You have ' + str(numberOfSavedLocations) + ' locations saved currently. Would you like to add more locations that you visit?')
 if moreLocationsToAddAnswer == 'Y':
     moreLocationsToAdd = True
+else:
+    moreLocationsToAdd = False
 
-if (moreLocationsToAdd):
+while moreLocationsToAdd:
+
     locationName = input('What is the name of this location? ')
     locationDistanceFromHome = int(input('How far do you have to travel for this location (one-way)? '))
     travellingFrequency = int(input('How often do you travel to this location weekly? '))
@@ -23,6 +26,8 @@ if (moreLocationsToAdd):
     travelByCar = False
     if travelByCarAnswer == 'Y':
         travelByCar = True
+    else:
+        travelByCar = False
 
     weeklyDistanceToTravelToThisLocation = locationDistanceFromHome * 2 * travellingFrequency
 
@@ -37,7 +42,15 @@ if (moreLocationsToAdd):
 
     totalWeeklyTransportCosts += weeklyCostToTravelToThisLocation
 
-print('Your weekly transportation costs are: ' + str(totalWeeklyTransportCosts) + '.')
+    print('Your weekly transportation costs are: ' + str(totalWeeklyTransportCosts) + '.')
 
-totalAnnualTransportCosts = totalWeeklyTransportCosts * 52
-print('Your annual transportation costs are: ' + str(totalAnnualTransportCosts) + '.')
+    totalAnnualTransportCosts = totalWeeklyTransportCosts * 52
+    print('Your annual transportation costs are: ' + str(totalAnnualTransportCosts) + '.')
+
+    moreLocationsToAddAnswer = input('You have ' + str(numberOfSavedLocations) + ' locations saved currently. Would you like to add more locations that you visit?')
+    if moreLocationsToAddAnswer == 'Y':
+        moreLocationsToAdd = True
+    else:
+        moreLocationsToAdd = False
+
+print('Hope this was helpful!')

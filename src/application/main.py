@@ -11,7 +11,9 @@ petrolMileageForYourCar = 14 #The distance travelled per litre of petrol by the 
 
 moreLocationsToAdd = False
 
-moreLocationsToAddAnswer = input('You have ' + str(numberOfSavedLocations) + ' locations saved currently. Would you like to add more locations that you visit?')
+print('You have ' + str(numberOfSavedLocations) + ' locations saved currently.')
+
+moreLocationsToAddAnswer = input('\nWould you like to add more locations that you visit? Answer \'Y\' for yes otherwise it will be assumed you travel here using public transport. ')
 if moreLocationsToAddAnswer == 'Y':
     moreLocationsToAdd = True
 else:
@@ -19,8 +21,9 @@ else:
 
 while moreLocationsToAdd:
 
+    print('\n-----------Adding new location----------------')
     locationName = input('What is the name of this location? ')
-    locationDistanceFromHome = int(input('How far do you have to travel for this location (one-way)? '))
+    locationDistanceFromHome = int(input('How far (in kms) do you have to travel for this location (one-way)? '))
     travellingFrequency = int(input('How often do you travel to this location weekly? '))
     travelByCarAnswer = input('Do you travel here by car? Answer \'Y\' for yes otherwise it will be assumed you travel here using public transport. ')
     travelByCar = False
@@ -42,15 +45,15 @@ while moreLocationsToAdd:
 
     totalWeeklyTransportCosts += weeklyCostToTravelToThisLocation
 
-    print('Your weekly transportation costs are: ' + str(totalWeeklyTransportCosts) + '.')
+    print('\nYour weekly transportation costs are: ' + str(totalWeeklyTransportCosts) + '.')
 
     totalAnnualTransportCosts = totalWeeklyTransportCosts * 52
     print('Your annual transportation costs are: ' + str(totalAnnualTransportCosts) + '.')
 
-    moreLocationsToAddAnswer = input('You have ' + str(numberOfSavedLocations) + ' locations saved currently. Would you like to add more locations that you visit?')
+    moreLocationsToAddAnswer = input('\nYou have ' + str(numberOfSavedLocations) + ' locations saved currently. Would you like to add more locations that you visit? ')
     if moreLocationsToAddAnswer == 'Y':
         moreLocationsToAdd = True
     else:
         moreLocationsToAdd = False
 
-print('Hope this was helpful!')
+print('\nHope this was helpful!')

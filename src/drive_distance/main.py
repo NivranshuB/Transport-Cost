@@ -1,5 +1,7 @@
 import os
 import requests
+import requests
+import time
 from dotenv import load_dotenv
 
 # Load API key
@@ -62,6 +64,45 @@ def get_drive_distance(origin, destination):
     except (KeyError, IndexError) as e:
         print("Response JSON parsing error:", data)
         raise Exception("Failed to parse route data.")
+    
+
+def get_petrol_stations_nz():
+    overpass_url = "http://overpass-api.de/api/interpreter"
+    
+    # Overpass QL query to find all petrol stations in New Zealand
+    overpass_query = """
+    [out:json][timeout:60];
+    area["ISO3166-1"="NZ"][admin_level=2]->.nz;
+    (
+      node["amenity"="fuel"](area.nz);
+      way["amenity"="fuel"](area.nz);
+      relation["amenity"="fuel"](area.nz);
+    );
+    out center;
+    """
+    
+    print("Fetching petrol station data from Overpass API...")
+    response = requests.post(overpass_url, data={"data": overpass_query})
+    
+    if response.status_code != 200:
+        raise Exception(f"Overpass API error: {response.status_code}")
+
+    data = response.json()
+    stations = []
+
+    for element in data["elements"]:
+        lat = element.get("lat") or element.get("center", {}).get("lat")
+        lon = element.get("lon") or element.get("center", {}).get("lon")
+        name = element.get("tags", {}).get("name", "Unnamed")
+        
+        if lat and lon:
+            stations.append({
+                "name": name,
+                "lat": lat,
+                "lon": lon
+            })
+
+    return stations
 
 
 if __name__ == "__main__":
@@ -81,3 +122,8 @@ if __name__ == "__main__":
         print(f"Estimated travel time: {duration} minutes")
     except Exception as e:
         print("Error:", e)
+
+    stations = get_petrol_stations_nz()
+    print(f"Found {len(stations)} petrol stations in NZ.")
+    for s in stations[:10]:  # Print just a sample
+        print(f"{s['name']}: ({s['lat']}, {s['lon']})")

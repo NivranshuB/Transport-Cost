@@ -1,6 +1,6 @@
 import os
 import requests
-import requests
+import folium
 import time
 from dotenv import load_dotenv
 
@@ -104,6 +104,22 @@ def get_petrol_stations_nz():
 
     return stations
 
+def create_petrol_station_map(stations, output_html="nz_petrol_stations_map.html"):
+    print("Creating map...")
+    # Set a rough center over New Zealand
+    m = folium.Map(location=[-41.0, 174.5], zoom_start=5)
+
+    for station in stations:
+        popup_text = f"{station['name']}<br>Lat: {station['lat']:.4f}, Lon: {station['lon']:.4f}"
+        folium.Marker(
+            location=[station['lat'], station['lon']],
+            popup=popup_text,
+            icon=folium.Icon(color="blue", icon="gas-pump", prefix="fa")
+        ).add_to(m)
+
+    m.save(output_html)
+    print(f"Map saved to {output_html}")
+
 
 if __name__ == "__main__":
     origin_addr = input("Enter origin address: ")
@@ -125,5 +141,6 @@ if __name__ == "__main__":
 
     stations = get_petrol_stations_nz()
     print(f"Found {len(stations)} petrol stations in NZ.")
+    create_petrol_station_map(stations)
     for s in stations[:10]:  # Print just a sample
         print(f"{s['name']}: ({s['lat']}, {s['lon']})")

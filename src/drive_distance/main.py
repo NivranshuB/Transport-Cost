@@ -2,6 +2,8 @@ import os
 import requests
 import folium
 import time
+from geopy.geocoders import Nominatim
+from geopy.distance import geodesic
 from dotenv import load_dotenv
 
 # Load API key
@@ -120,6 +122,50 @@ def create_petrol_station_map(stations, output_html="nz_petrol_stations_map.html
     m.save(output_html)
     print(f"Map saved to {output_html}")
 
+def find_petrol_stations(lat, lon, radius_m=5000):
+    # Use Overpass API to query OSM
+    overpass_url = "http://overpass-api.de/api/interpreter"
+    query = f"""
+    [out:json];
+    (
+      node["amenity"="fuel"](around:{radius_m},{lat},{lon});
+    );
+    out center;
+    """
+    response = requests.post(overpass_url, data=query)
+    response.raise_for_status()
+    data = response.json()
+
+    stations = []
+    for element in data.get("elements", []):
+        name = element.get("tags", {}).get("name", "Unnamed Station")
+        station_lat = element["lat"]
+        station_lon = element["lon"]
+        dist_km = geodesic((lat, lon), (station_lat, station_lon)).km
+        stations.append({
+            "name": name,
+            "lat": station_lat,
+            "lon": station_lon,
+            "distance_km": dist_km
+        })
+
+    # Sort by distance and return top 10
+    stations.sort(key=lambda x: x["distance_km"])
+    return stations[:10]
+
+def plot_stations_on_map(origin, stations):
+    map_obj = folium.Map(location=origin, zoom_start=13)
+    folium.Marker(origin, tooltip="Origin", icon=folium.Icon(color='red')).add_to(map_obj)
+
+    for s in stations:
+        folium.Marker(
+            location=(s["lat"], s["lon"]),
+            tooltip=f"{s['name']} ({s['distance_km']:.2f} km)",
+            icon=folium.Icon(color='blue')
+        ).add_to(map_obj)
+
+    return map_obj
+
 
 if __name__ == "__main__":
     origin_addr = input("Enter origin address: ")
@@ -144,3 +190,15 @@ if __name__ == "__main__":
     create_petrol_station_map(stations)
     for s in stations[:10]:  # Print just a sample
         print(f"{s['name']}: ({s['lat']}, {s['lon']})")
+
+    stations = find_petrol_stations(*origin_coords)
+
+    print("\n📍 Nearest Petrol Stations:")
+    for s in stations:
+        print(f"{s['name']} - {s['distance_km']:.2f} km")
+
+    petrol_map = plot_stations_on_map(origin_coords, stations)
+    petrol_map.save("nearest_petrol_stations_map.html")
+    print("\n✅ Map saved as 'nearest_petrol_stations_map.html'")
+
+

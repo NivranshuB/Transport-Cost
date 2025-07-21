@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_1025b4b3c7f644153021f8b178129545 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_1025b4b3c7f644153021f8b178129545" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_1025b4b3c7f644153021f8b178129545 = L.map(
+                "map_1025b4b3c7f644153021f8b178129545",
+                {
+                    center: [-37.040409, 174.865497],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 13,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_c30592270050c28caa74b81f5b059f2a = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_c30592270050c28caa74b81f5b059f2a.addTo(map_1025b4b3c7f644153021f8b178129545);
+        
+    
+            var marker_c936404f9621a924565f9a6f2145d823 = L.marker(
+                [-37.040409, 174.865497],
+                {
+}
+            ).addTo(map_1025b4b3c7f644153021f8b178129545);
+        
+    
+            var icon_56a8670f15d3450c33cb4528055c7a32 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+            marker_c936404f9621a924565f9a6f2145d823.bindTooltip(
+                `<div>
+                     Origin
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_c936404f9621a924565f9a6f2145d823.setIcon(icon_56a8670f15d3450c33cb4528055c7a32);
+            
+    
+            var marker_9635e503602335ea06d19d1f5a78db72 = L.marker(
+                [-37.0321559, 174.8689078],
+                {
+}
+            ).addTo(map_1025b4b3c7f644153021f8b178129545);
+        
+    
+            var icon_726749a2d7d6e03891458f8a6abe9dc4 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+            marker_9635e503602335ea06d19d1f5a78db72.bindTooltip(
+                `<div>
+                     Mobil (0.96 km)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_9635e503602335ea06d19d1f5a78db72.setIcon(icon_726749a2d7d6e03891458f8a6abe9dc4);
+            
+    
+            var marker_69e92fb5cf7d86a1d9209bc7f0abb2c6 = L.marker(
+                [-37.0279117, 174.8866317],
+                {
+}
+            ).addTo(map_1025b4b3c7f644153021f8b178129545);
+        
+    
+            var icon_024d0d0b0721f1d30b1ae9267c119714 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+            marker_69e92fb5cf7d86a1d9209bc7f0abb2c6.bindTooltip(
+                `<div>
+                     Caltex Leabank (2.34 km)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_69e92fb5cf7d86a1d9209bc7f0abb2c6.setIcon(icon_024d0d0b0721f1d30b1ae9267c119714);
+            
+    
+            var marker_a1282e44edda653208a1412cc47932a0 = L.marker(
+                [-37.0178045, 174.8620182],
+                {
+}
+            ).addTo(map_1025b4b3c7f644153021f8b178129545);
+        
+    
+            var icon_5f7023ee5e72bfb0850e4d47849ae4ee = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+            marker_a1282e44edda653208a1412cc47932a0.bindTooltip(
+                `<div>
+                     Z (2.53 km)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_a1282e44edda653208a1412cc47932a0.setIcon(icon_5f7023ee5e72bfb0850e4d47849ae4ee);
+            
+    
+            var marker_2df89d24bd8bee787e6fed1262bd427c = L.marker(
+                [-37.0142412, 174.8600921],
+                {
+}
+            ).addTo(map_1025b4b3c7f644153021f8b178129545);
+        
+    
+            var icon_70c400e2fc47dd0ce3fec287512da12b = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+            marker_2df89d24bd8bee787e6fed1262bd427c.bindTooltip(
+                `<div>
+                     Waitomo (2.94 km)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_2df89d24bd8bee787e6fed1262bd427c.setIcon(icon_70c400e2fc47dd0ce3fec287512da12b);
+            
+    
+            var marker_f93aa4800a6d31e0bfa0e4e051cb56d9 = L.marker(
+                [-37.0236558, 174.8996424],
+                {
+}
+            ).addTo(map_1025b4b3c7f644153021f8b178129545);
+        
+    
+            var icon_0adeef2e9287c864d2ae37ee067b913b = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+            marker_f93aa4800a6d31e0bfa0e4e051cb56d9.bindTooltip(
+                `<div>
+                     Z Manurewa (3.56 km)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_f93aa4800a6d31e0bfa0e4e051cb56d9.setIcon(icon_0adeef2e9287c864d2ae37ee067b913b);
+            
+    
+            var marker_ea4d79813d5cc3e0575160bd74802f4e = L.marker(
+                [-37.0302209, 174.9044358],
+                {
+}
+            ).addTo(map_1025b4b3c7f644153021f8b178129545);
+        
+    
+            var icon_1a92c7a60eed11ff92077615120c1fe5 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+            marker_ea4d79813d5cc3e0575160bd74802f4e.bindTooltip(
+                `<div>
+                     npd (3.64 km)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_ea4d79813d5cc3e0575160bd74802f4e.setIcon(icon_1a92c7a60eed11ff92077615120c1fe5);
+            
+    
+            var marker_2149f3d08b4a0f47d0f8517eb7aa599e = L.marker(
+                [-37.0330572, 174.9065289],
+                {
+}
+            ).addTo(map_1025b4b3c7f644153021f8b178129545);
+        
+    
+            var icon_1de35a49536413f41d34c7fc7f988ea9 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+            marker_2149f3d08b4a0f47d0f8517eb7aa599e.bindTooltip(
+                `<div>
+                     Caltex (3.74 km)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_2149f3d08b4a0f47d0f8517eb7aa599e.setIcon(icon_1de35a49536413f41d34c7fc7f988ea9);
+            
+    
+            var marker_b8699b8d1f64cf1dbc91660d7c66ef19 = L.marker(
+                [-37.03459, 174.9082018],
+                {
+}
+            ).addTo(map_1025b4b3c7f644153021f8b178129545);
+        
+    
+            var icon_391c3c80b72449020fb446013c25678f = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+            marker_b8699b8d1f64cf1dbc91660d7c66ef19.bindTooltip(
+                `<div>
+                     Gull (3.85 km)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_b8699b8d1f64cf1dbc91660d7c66ef19.setIcon(icon_391c3c80b72449020fb446013c25678f);
+            
+    
+            var marker_1273996c4e44abc05b133794f920b002 = L.marker(
+                [-37.0088029, 174.8904623],
+                {
+}
+            ).addTo(map_1025b4b3c7f644153021f8b178129545);
+        
+    
+            var icon_76158b398c513804a8b5dba7e249713e = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+            marker_1273996c4e44abc05b133794f920b002.bindTooltip(
+                `<div>
+                     Mobil (4.15 km)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_1273996c4e44abc05b133794f920b002.setIcon(icon_76158b398c513804a8b5dba7e249713e);
+            
+    
+            var marker_69ea27cce6b322e1a0a3788b4f72a3e3 = L.marker(
+                [-37.0028299, 174.8652883],
+                {
+}
+            ).addTo(map_1025b4b3c7f644153021f8b178129545);
+        
+    
+            var icon_16a45dd02d3d9f5de3d4645d94ee3f67 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+            marker_69ea27cce6b322e1a0a3788b4f72a3e3.bindTooltip(
+                `<div>
+                     Truck Stop (4.17 km)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_69ea27cce6b322e1a0a3788b4f72a3e3.setIcon(icon_16a45dd02d3d9f5de3d4645d94ee3f67);
+            
+</script>
+</html>

@@ -148,14 +148,6 @@ def find_petrol_stations(lat, lon, radius_m=5000):
             print(f"Skipping {name} due to routing error: {e}")
             continue
 
-        dist_km = geodesic((lat, lon), (station_lat, station_lon)).km
-        stations.append({
-            "name": name,
-            "lat": station_lat,
-            "lon": station_lon,
-            "distance_km": dist_km
-        })
-
         stations.append({
             "name": name,
             "lat": station_lat,

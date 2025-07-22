@@ -141,6 +141,13 @@ def find_petrol_stations(lat, lon, radius_m=5000):
         name = element.get("tags", {}).get("name", "Unnamed Station")
         station_lat = element["lat"]
         station_lon = element["lon"]
+
+        try:
+            dist_km, duration_min = get_drive_distance((lat, lon), (station_lat, station_lon))
+        except:
+            print(f"Skipping {name} due to routing error: {e}")
+            continue
+
         dist_km = geodesic((lat, lon), (station_lat, station_lon)).km
         stations.append({
             "name": name,
@@ -148,6 +155,17 @@ def find_petrol_stations(lat, lon, radius_m=5000):
             "lon": station_lon,
             "distance_km": dist_km
         })
+
+        stations.append({
+            "name": name,
+            "lat": station_lat,
+            "lon": station_lon,
+            "distance_km": dist_km,
+            "duration_min": duration_min
+        })
+
+        # Optional: small delay to avoid hitting rate limits
+        time.sleep(1)
 
     # Sort by distance and return top 10
     stations.sort(key=lambda x: x["distance_km"])

@@ -122,13 +122,12 @@ def create_petrol_station_map(stations, output_html="nz_petrol_stations_map.html
     m.save(output_html)
     print(f"Map saved to {output_html}")
 
-def find_petrol_stations(lat, lon, radius_m=5000):
-    # Use Overpass API to query OSM
+def find_petrol_stations(origin_lat, origin_lon, radius_m=5000):
     overpass_url = "http://overpass-api.de/api/interpreter"
     query = f"""
     [out:json];
     (
-      node["amenity"="fuel"](around:{radius_m},{lat},{lon});
+      node["amenity"="fuel"](around:{radius_m},{origin_lat},{origin_lon});
     );
     out center;
     """
@@ -137,36 +136,34 @@ def find_petrol_stations(lat, lon, radius_m=5000):
     data = response.json()
 
     stations = []
+    origin = (origin_lat, origin_lon)
+
     for element in data.get("elements", []):
         name = element.get("tags", {}).get("name", "Unnamed Station")
-        station_lat = element["lat"]
-        station_lon = element["lon"]
+        lat = element["lat"]
+        lon = element["lon"]
 
         try:
-            dist_km, duration_min = get_drive_distance((lat, lon), (station_lat, station_lon))
-        except:
+            drive_dist_km, drive_time_min = get_drive_distance(origin, (lat, lon))
+        except Exception as e:
             print(f"Skipping {name} due to routing error: {e}")
             continue
 
         stations.append({
             "name": name,
-            "lat": station_lat,
-            "lon": station_lon,
-            "distance_km": dist_km,
-            "duration_min": duration_min
+            "lat": lat,
+            "lon": lon,
+            "distance_km": drive_dist_km,
+            "duration_min": drive_time_min
         })
 
-        # Optional: small delay to avoid hitting rate limits
-        time.sleep(1)
-
-    # Sort by distance and return top 10
     stations.sort(key=lambda x: x["distance_km"])
     return stations[:10]
 
 def plot_stations_on_map(origin, stations):
     map_obj = folium.Map(location=origin, zoom_start=13)
-    
-    # Add the origin marker
+
+    # Add origin marker
     folium.Marker(
         origin,
         tooltip="Origin",
@@ -174,20 +171,21 @@ def plot_stations_on_map(origin, stations):
     ).add_to(map_obj)
 
     for i, s in enumerate(stations):
-        if i == 0:
-            # Closest station gets a green star icon
-            folium.Marker(
-                location=(s["lat"], s["lon"]),
-                tooltip=f"🏆 Closest: {s['name']} ({s['distance_km']:.2f} km)",
-                icon=folium.Icon(color='green', icon='star', prefix='fa')
-            ).add_to(map_obj)
-        else:
-            # All other stations
-            folium.Marker(
-                location=(s["lat"], s["lon"]),
-                tooltip=f"{s['name']} ({s['distance_km']:.2f} km)",
-                icon=folium.Icon(color='blue', icon='gas-pump', prefix='fa')
-            ).add_to(map_obj)
+        popup_html = f"""
+        <b>{'🏆 Closest: ' if i == 0 else ''}{s['name']}</b><br>
+        Distance: {s['distance_km']:.2f} km<br>
+        ETA: {s['duration_min']:.1f} minutes
+        """
+
+        folium.Marker(
+            location=(s["lat"], s["lon"]),
+            popup=popup_html,
+            icon=folium.Icon(
+                color='green' if i == 0 else 'blue',
+                icon='star' if i == 0 else 'gas-pump',
+                prefix='fa'
+            )
+        ).add_to(map_obj)
 
     return map_obj
 

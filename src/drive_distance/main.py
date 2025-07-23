@@ -165,14 +165,29 @@ def find_petrol_stations(lat, lon, radius_m=5000):
 
 def plot_stations_on_map(origin, stations):
     map_obj = folium.Map(location=origin, zoom_start=13)
-    folium.Marker(origin, tooltip="Origin", icon=folium.Icon(color='red')).add_to(map_obj)
+    
+    # Add the origin marker
+    folium.Marker(
+        origin,
+        tooltip="Origin",
+        icon=folium.Icon(color='red', icon='home', prefix='fa')
+    ).add_to(map_obj)
 
-    for s in stations:
-        folium.Marker(
-            location=(s["lat"], s["lon"]),
-            tooltip=f"{s['name']} ({s['distance_km']:.2f} km)",
-            icon=folium.Icon(color='blue')
-        ).add_to(map_obj)
+    for i, s in enumerate(stations):
+        if i == 0:
+            # Closest station gets a green star icon
+            folium.Marker(
+                location=(s["lat"], s["lon"]),
+                tooltip=f"🏆 Closest: {s['name']} ({s['distance_km']:.2f} km)",
+                icon=folium.Icon(color='green', icon='star', prefix='fa')
+            ).add_to(map_obj)
+        else:
+            # All other stations
+            folium.Marker(
+                location=(s["lat"], s["lon"]),
+                tooltip=f"{s['name']} ({s['distance_km']:.2f} km)",
+                icon=folium.Icon(color='blue', icon='gas-pump', prefix='fa')
+            ).add_to(map_obj)
 
     return map_obj
 

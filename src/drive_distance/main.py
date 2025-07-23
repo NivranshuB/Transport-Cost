@@ -1,10 +1,26 @@
 import os
 import requests
 import folium
+from folium.features import CustomIcon
 import time
 from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
 from dotenv import load_dotenv
+
+BRAND_LOGOS = {
+    "z": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Z_Energy_logo.svg/1024px-Z_Energy_logo.svg.png",
+    "bp": "https://upload.wikimedia.org/wikipedia/en/thumb/5/5e/BP_logo.svg/1024px-BP_logo.svg.png",
+    "caltex": "https://upload.wikimedia.org/wikipedia/en/thumb/f/f8/Caltex_Logo.svg/1024px-Caltex_Logo.svg.png",
+    "mobil": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Mobil_logo.svg/1280px-Mobil_logo.svg.png",
+    "waitomo": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Waitomo_Group_logo.svg/1024px-Waitomo_Group_logo.svg.png",
+}
+
+def get_brand_logo(station_name):
+    lower_name = station_name.lower()
+    for brand, logo_url in BRAND_LOGOS.items():
+        if brand in lower_name:
+            return logo_url
+    return None
 
 # Load API key
 load_dotenv()
@@ -163,7 +179,6 @@ def find_petrol_stations(origin_lat, origin_lon, radius_m=5000):
 def plot_stations_on_map(origin, stations):
     map_obj = folium.Map(location=origin, zoom_start=13)
 
-    # Add origin marker
     folium.Marker(
         origin,
         tooltip="Origin",
@@ -177,14 +192,21 @@ def plot_stations_on_map(origin, stations):
         ETA: {s['duration_min']:.1f} minutes
         """
 
-        folium.Marker(
-            location=(s["lat"], s["lon"]),
-            popup=popup_html,
-            icon=folium.Icon(
+        # Use logo if available
+        logo_url = get_brand_logo(s["name"])
+        if logo_url:
+            icon = CustomIcon(logo_url, icon_size=(30, 30))
+        else:
+            icon = folium.Icon(
                 color='green' if i == 0 else 'blue',
                 icon='star' if i == 0 else 'gas-pump',
                 prefix='fa'
             )
+
+        folium.Marker(
+            location=(s["lat"], s["lon"]),
+            popup=popup_html,
+            icon=icon
         ).add_to(map_obj)
 
     return map_obj

@@ -15,11 +15,19 @@ BRAND_LOGOS = {
     "waitomo": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Waitomo_Group_logo.svg/1024px-Waitomo_Group_logo.svg.png",
 }
 
-def get_brand_logo(station_name):
-    lower_name = station_name.lower()
-    for brand, logo_url in BRAND_LOGOS.items():
-        if brand in lower_name:
-            return logo_url
+def get_brand_logo_path(station_name, logo_dir="logos"):
+    # Get the absolute path to the logos folder, relative to this script
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    logo_path = os.path.join(base_dir, logo_dir)
+
+    if not os.path.exists(logo_path):
+        raise FileNotFoundError(f"Logo directory not found: {logo_path}")
+
+    station_lower = station_name.lower()
+    for file in os.listdir(logo_path):
+        brand = os.path.splitext(file)[0]  # e.g., "bp"
+        if brand in station_lower:
+            return os.path.join(logo_path, file)
     return None
 
 # Load API key
@@ -192,10 +200,9 @@ def plot_stations_on_map(origin, stations):
         ETA: {s['duration_min']:.1f} minutes
         """
 
-        # Use logo if available
-        logo_url = get_brand_logo(s["name"])
-        if logo_url:
-            icon = CustomIcon(logo_url, icon_size=(30, 30))
+        logo_path = get_brand_logo_path(s["name"])
+        if logo_path and os.path.exists(logo_path):
+            icon = CustomIcon(logo_path, icon_size=(30, 30))
         else:
             icon = folium.Icon(
                 color='green' if i == 0 else 'blue',

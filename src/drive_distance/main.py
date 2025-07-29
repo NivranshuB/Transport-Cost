@@ -200,9 +200,12 @@ def plot_stations_on_map(origin, stations):
         ETA: {s['duration_min']:.1f} minutes
         """
 
+        # Set larger icon for nearest station
+        icon_size = (50, 50) if i == 0 else (30, 30)
+
         logo_path = get_brand_logo_path(s["name"])
         if logo_path and os.path.exists(logo_path):
-            icon = CustomIcon(logo_path, icon_size=(30, 30))
+            icon = CustomIcon(logo_path, icon_size=icon_size)
         else:
             icon = folium.Icon(
                 color='green' if i == 0 else 'blue',

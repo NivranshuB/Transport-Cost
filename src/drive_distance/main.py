@@ -7,6 +7,20 @@ from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
 from dotenv import load_dotenv
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(os.path.dirname(BASE_DIR))
+OUTPUT_DIR = os.path.join(PROJECT_ROOT, "output")
+
+# Relative paths
+LOGO_DIR = os.path.join(BASE_DIR, "..", "logos")
+
+print(f"BASE_DIR = {BASE_DIR}")
+print(f"PROJECT_ROOT = {PROJECT_ROOT}")
+print(f"OUTPUT_DIR = {OUTPUT_DIR}")
+
+if not os.path.exists(OUTPUT_DIR):
+    os.makedirs(OUTPUT_DIR)
+
 BRAND_LOGOS = {
     "z": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Z_Energy_logo.svg/1024px-Z_Energy_logo.svg.png",
     "bp": "https://upload.wikimedia.org/wikipedia/en/thumb/5/5e/BP_logo.svg/1024px-BP_logo.svg.png",
@@ -15,20 +29,17 @@ BRAND_LOGOS = {
     "waitomo": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Waitomo_Group_logo.svg/1024px-Waitomo_Group_logo.svg.png",
 }
 
-def get_brand_logo_path(station_name, logo_dir="logos"):
-    # Get the absolute path to the logos folder, relative to this script
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    logo_path = os.path.join(base_dir, logo_dir)
-
-    if not os.path.exists(logo_path):
-        raise FileNotFoundError(f"Logo directory not found: {logo_path}")
+def get_brand_logo_path(station_name, logo_dir=LOGO_DIR):
+    if not os.path.exists(logo_dir):
+        raise FileNotFoundError(f"Logo directory not found: {logo_dir}")
 
     station_lower = station_name.lower()
-    for file in os.listdir(logo_path):
-        brand = os.path.splitext(file)[0]  # e.g., "bp"
+    for file in os.listdir(logo_dir):
+        brand = os.path.splitext(file)[0].lower()
         if brand in station_lower:
-            return os.path.join(logo_path, file)
+            return os.path.join(logo_dir, file)
     return None
+
 
 # Load API key
 load_dotenv()
@@ -130,7 +141,7 @@ def get_petrol_stations_nz():
 
     return stations
 
-def create_petrol_station_map(stations, output_html="nz_petrol_stations_map.html"):
+def create_petrol_station_map(stations, output_html=os.path.join(OUTPUT_DIR, "nz_petrol_stations_map.html")):
     print("Creating map...")
     # Set a rough center over New Zealand
     m = folium.Map(location=[-41.0, 174.5], zoom_start=5)
@@ -184,6 +195,30 @@ def find_petrol_stations(origin_lat, origin_lon, radius_m=5000):
     stations.sort(key=lambda x: x["distance_km"])
     return stations[:10]
 
+def create_logo_marker(lat, lon, logo_path, is_closest=False):
+    size = 50 if not is_closest else 60  # Highlight closest station
+    border = "3px solid gold" if is_closest else "1px solid #ccc"
+
+    html = f"""
+    <div style="
+        width: {size}px;
+        height: {size}px;
+        background: white;
+        border-radius: 50%;
+        border: {border};
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    ">
+        <img src="{logo_path}" style="width:{int(size*0.6)}px; height:{int(size*0.6)}px;" />
+    </div>
+    """
+
+    icon = folium.DivIcon(html=html)
+    return folium.Marker(location=(lat, lon), icon=icon)
+
+
 def plot_stations_on_map(origin, stations):
     map_obj = folium.Map(location=origin, zoom_start=13)
 
@@ -194,33 +229,17 @@ def plot_stations_on_map(origin, stations):
     ).add_to(map_obj)
 
     for i, s in enumerate(stations):
-        popup_html = f"""
-        <b>{'🏆 Closest: ' if i == 0 else ''}{s['name']}</b><br>
-        Distance: {s['distance_km']:.2f} km<br>
-        ETA: {s['duration_min']:.1f} minutes
-        """
+        logo_path = s.get("logo_path", "logos/default.png")  # relative path
+        marker = create_logo_marker(
+            lat=s["lat"],
+            lon=s["lon"],
+            logo_path=logo_path,
+            is_closest=(i == 0)  # first one is the closest
+        )
+        marker.add_to(map_obj)
 
-        # Set larger icon for nearest station
-        icon_size = (50, 50) if i == 0 else (30, 30)
-
-        logo_path = get_brand_logo_path(s["name"])
-        if logo_path and os.path.exists(logo_path):
-            icon = CustomIcon(logo_path, icon_size=icon_size)
-        else:
-            icon = folium.Icon(
-                color='green' if i == 0 else 'blue',
-                icon='star' if i == 0 else 'gas-pump',
-                prefix='fa'
-            )
-
-        folium.Marker(
-            location=(s["lat"], s["lon"]),
-            popup=popup_html,
-            icon=icon
-        ).add_to(map_obj)
 
     return map_obj
-
 
 if __name__ == "__main__":
     origin_addr = input("Enter origin address: ")
@@ -253,7 +272,9 @@ if __name__ == "__main__":
         print(f"{s['name']} - {s['distance_km']:.2f} km")
 
     petrol_map = plot_stations_on_map(origin_coords, stations)
-    petrol_map.save("nearest_petrol_stations_map.html")
-    print("\n✅ Map saved as 'nearest_petrol_stations_map.html'")
+
+    nearest_map_path = os.path.join(OUTPUT_DIR, "nearest_petrol_stations_map.html")
+    petrol_map.save(nearest_map_path)
+    print(f"\n✅ Map saved as '{nearest_map_path}'")
 
 

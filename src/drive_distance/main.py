@@ -185,8 +185,8 @@ def find_petrol_stations(origin_lat, origin_lon, radius_m=5000):
     return stations[:10]
 
 def create_logo_marker(lat, lon, logo_path, is_closest=False):
-    size = 50 if not is_closest else 60  # Highlight closest station
-    border = "3px solid gold" if is_closest else "1px solid #ccc"
+    size = 70 if is_closest else 50  # Highlight closest station
+    border = "5px solid gold" if is_closest else "3px solid #ccc"
 
     html = f"""
     <div style="

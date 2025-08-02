@@ -184,7 +184,7 @@ def find_petrol_stations(origin_lat, origin_lon, radius_m=5000):
     stations.sort(key=lambda x: x["distance_km"])
     return stations[:10]
 
-def create_logo_marker(lat, lon, logo_path, is_closest=False):
+def create_logo_marker(lat, lon, logo_path, is_closest=False, popup_text=None):
     size = 70 if is_closest else 50  # Highlight closest station
     border = "5px solid gold" if is_closest else "3px solid #ccc"
 
@@ -205,7 +205,9 @@ def create_logo_marker(lat, lon, logo_path, is_closest=False):
     """
 
     icon = folium.DivIcon(html=html)
-    return folium.Marker(location=(lat, lon), icon=icon)
+    popup = folium.Popup(popup_text, max_width=300) if popup_text else None
+
+    return folium.Marker(location=(lat, lon), icon=icon, popup=popup)
 
 
 def plot_stations_on_map(origin, stations):
@@ -221,12 +223,19 @@ def plot_stations_on_map(origin, stations):
         logo_path = get_brand_logo_filename(s['name']) or "default.png"
         logo_filename = os.path.basename(logo_path)
         relative_logo_path = f"../logos/{logo_filename}"
+
+        popup_html = f"""
+        <b>{s['name']}</b><br>
+        ⛽ {s['distance_km']:.2f} km<br>
+        🕒 {s['duration_min']:.1f} minutes
+        """
         
         marker = create_logo_marker(
             lat=s["lat"],
             lon=s["lon"],
             logo_path=relative_logo_path,
-            is_closest=(i == 0)
+            is_closest=(i == 0),
+            popup_text=popup_html
         )
         marker.add_to(map_obj)
 

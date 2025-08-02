@@ -12,7 +12,7 @@ PROJECT_ROOT = os.path.dirname(os.path.dirname(BASE_DIR))
 OUTPUT_DIR = os.path.join(PROJECT_ROOT, "output")
 
 # Relative paths
-LOGO_DIR = os.path.join(BASE_DIR, "..", "logos")
+# LOGO_DIR = os.path.join(BASE_DIR, "..", "logos")
 
 print(f"BASE_DIR = {BASE_DIR}")
 print(f"PROJECT_ROOT = {PROJECT_ROOT}")
@@ -21,25 +21,14 @@ print(f"OUTPUT_DIR = {OUTPUT_DIR}")
 if not os.path.exists(OUTPUT_DIR):
     os.makedirs(OUTPUT_DIR)
 
-BRAND_LOGOS = {
-    "z": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Z_Energy_logo.svg/1024px-Z_Energy_logo.svg.png",
-    "bp": "https://upload.wikimedia.org/wikipedia/en/thumb/5/5e/BP_logo.svg/1024px-BP_logo.svg.png",
-    "caltex": "https://upload.wikimedia.org/wikipedia/en/thumb/f/f8/Caltex_Logo.svg/1024px-Caltex_Logo.svg.png",
-    "mobil": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Mobil_logo.svg/1280px-Mobil_logo.svg.png",
-    "waitomo": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Waitomo_Group_logo.svg/1024px-Waitomo_Group_logo.svg.png",
-}
-
-def get_brand_logo_path(station_name, logo_dir=LOGO_DIR):
-    if not os.path.exists(logo_dir):
-        raise FileNotFoundError(f"Logo directory not found: {logo_dir}")
-
+def get_brand_logo_filename(station_name, logo_dir="logos"):
+    # Just get logo filename, not full path
     station_lower = station_name.lower()
     for file in os.listdir(logo_dir):
-        brand = os.path.splitext(file)[0].lower()
+        brand = os.path.splitext(file)[0]  # e.g., "bp"
         if brand in station_lower:
-            return os.path.join(logo_dir, file)
+            return file
     return None
-
 
 # Load API key
 load_dotenv()
@@ -229,15 +218,17 @@ def plot_stations_on_map(origin, stations):
     ).add_to(map_obj)
 
     for i, s in enumerate(stations):
-        logo_path = s.get("logo_path", "logos/default.png")  # relative path
+        logo_path = get_brand_logo_filename(s['name']) or "default.png"
+        logo_filename = os.path.basename(logo_path)
+        relative_logo_path = f"../logos/{logo_filename}"
+        
         marker = create_logo_marker(
             lat=s["lat"],
             lon=s["lon"],
-            logo_path=logo_path,
-            is_closest=(i == 0)  # first one is the closest
+            logo_path=relative_logo_path,
+            is_closest=(i == 0)
         )
         marker.add_to(map_obj)
-
 
     return map_obj
 

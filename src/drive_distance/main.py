@@ -23,7 +23,7 @@ if not os.path.exists(OUTPUT_DIR):
 
 def get_brand_logo_filename(station_name, logo_dir="logos"):
     # Just get logo filename, not full path
-    station_lower = station_name.lower()
+    station_lower = station_name.lower().replace('.', '')
     for file in os.listdir(logo_dir):
         brand = os.path.splitext(file)[0]  # e.g., "bp"
         if brand in station_lower:
@@ -276,5 +276,3 @@ if __name__ == "__main__":
     nearest_map_path = os.path.join(OUTPUT_DIR, "nearest_petrol_stations_map.html")
     petrol_map.save(nearest_map_path)
     print(f"\n✅ Map saved as '{nearest_map_path}'")
-
-
